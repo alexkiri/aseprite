@@ -5,14 +5,15 @@ on:
     - '.github/workflows/build-auto.yml'
     - 'build.sh'
     - 'laf'
+  workflow_dispatch:
 jobs:
   build-auto:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
-        build_type: [RelWithDebInfo, Debug]
+        os: [windows-latest]
+        build_type: [Release]
     steps:
     - uses: actions/checkout@v4
       with:
@@ -42,3 +43,8 @@ jobs:
         export ASEPRITE=$PWD/build/bin/aseprite
         cd tests
         $XVFB bash run-tests.sh
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: artifacts
+        path: ./build/bin/*
